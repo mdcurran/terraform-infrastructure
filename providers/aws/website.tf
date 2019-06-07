@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "mdcurran-website-public" {
-  bucket        = "mdcurran.com"
+  bucket        = "${var.mdcurran_website_domain}"
   region        = "${var.aws_region}"
   acl           = "private"
   force_destroy = "false"
@@ -21,7 +21,7 @@ resource "aws_s3_bucket_policy" "mdcurran-website-public" {
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::mdcurran.com/*"
+            "Resource": "arn:aws:s3:::${var.mdcurran_website_domain}/*"
         }
     ]
 }
@@ -29,18 +29,18 @@ resource "aws_s3_bucket_policy" "mdcurran-website-public" {
 }
 
 resource "aws_s3_bucket" "mdcurran-website-redirect" {
-  bucket        = "www.mdcurran.com"
+  bucket        = "www.${var.mdcurran_website_domain}"
   region        = "${var.aws_region}"
   acl           = "private"
   force_destroy = "false"
 
   website {
-    redirect_all_requests_to = "mdcurran.com"
+    redirect_all_requests_to = "${var.mdcurran_website_domain}"
   }
 }
 
 locals {
-  s3_origin_id = "S3-mdcurran.com"
+  s3_origin_id = "S3-${var.mdcurran_website_domain}"
 }
 
 resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
@@ -51,7 +51,7 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "CloudFront distribution for mdcurran.com"
+  comment             = "CloudFront distribution for ${var.mdcurran_website_domain}"
   default_root_object = "index.html"
 
   logging_config {
@@ -60,7 +60,7 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
     prefix          = "cdn/"
   }
 
-  aliases = ["mdcurran.com", "www.mdcurran.com"]
+  aliases = ["${var.mdcurran_website_domain}", "www.${var.mdcurran_website_domain}"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
