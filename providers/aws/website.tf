@@ -38,3 +38,59 @@ resource "aws_s3_bucket" "mdcurran-website-redirect" {
     redirect_all_requests_to = "mdcurran.com"
   }
 }
+
+locals {
+  s3_origin_id = "S3-mdcurran.com"
+}
+
+resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
+  origin {
+    domain_name = "${aws_s3_bucket.mdcurran-website-public.bucket_regional_domain_name}"
+    origin_id   = "${local.s3_origin_id}"
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  comment             = "CloudFront distribution for mdcurran.com"
+  default_root_object = "index.html"
+
+  logging_config {
+    include_cookies = false
+    bucket          = "${aws_s3_bucket.mdcurran-website-public.bucket_domain_name}"
+    prefix          = "cdn/"
+  }
+
+  aliases = ["mdcurran.com", "www.mdcurran.com"]
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "${local.s3_origin_id}"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:079785868694:certificate/86b6c42d-8ed6-4605-a75e-94e27340790e"
+    minimum_protocol_version = "TLSv1.1_2016"
+    ssl_support_method       = "sni-only"
+  }
+}
