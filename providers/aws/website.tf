@@ -26,6 +26,10 @@ resource "aws_s3_bucket_policy" "mdcurran-website-public" {
     ]
 }
   POLICY
+
+  depends_on = [
+    "aws_s3_bucket.mdcurran-website-public"
+  ]
 }
 
 resource "aws_s3_bucket" "mdcurran-website-redirect" {
@@ -93,4 +97,9 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
     minimum_protocol_version = "TLSv1.1_2016"
     ssl_support_method       = "sni-only"
   }
+
+  depends_on = [
+    "aws_s3_bucket.mdcurran-website-public",
+    "aws_s3_bucket.mdcurran-website-redirect"
+  ]
 }
