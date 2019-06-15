@@ -60,8 +60,8 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "${aws_s3_bucket.mdcurran-website-public.bucket_domain_name}"
-    prefix          = "cdn/"
+    bucket          = "${aws_s3_bucket.mdcurran-logs.bucket_domain_name}"
+    prefix          = "mdcurran.com/"
   }
 
   aliases = ["${var.mdcurran_website_domain}", "www.${var.mdcurran_website_domain}"]
@@ -99,7 +99,8 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
   }
 
   depends_on = [
+    "aws_s3_bucket.mdcurran-logs",
     "aws_s3_bucket.mdcurran-website-public",
-    "aws_s3_bucket.mdcurran-website-redirect"
+    "aws_s3_bucket.mdcurran-website-redirect",
   ]
 }
