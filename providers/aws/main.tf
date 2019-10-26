@@ -11,3 +11,5 @@ resource "aws_s3_bucket" "mdcurran" {
   acl           = "private"
   force_destroy = "false"
 }
+
+resource "null_resource" "example" {}
