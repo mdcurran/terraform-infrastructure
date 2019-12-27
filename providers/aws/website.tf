@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "mdcurran-website-public" {
-  bucket        = "${var.mdcurran_website_domain}"
-  region        = "${var.aws_region}"
+  bucket        = var.mdcurran_website_domain
+  region        = var.aws_region
   acl           = "private"
   force_destroy = "false"
 
@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "mdcurran-website-public" {
 }
 
 resource "aws_s3_bucket_policy" "mdcurran-website-public" {
-  bucket = "${aws_s3_bucket.mdcurran-website-public.id}"
+  bucket = aws_s3_bucket.mdcurran-website-public.id
 
   policy = <<POLICY
 {
@@ -25,32 +25,26 @@ resource "aws_s3_bucket_policy" "mdcurran-website-public" {
         }
     ]
 }
-  POLICY
+POLICY
 
-  depends_on = [
-    "aws_s3_bucket.mdcurran-website-public"
-  ]
+  depends_on = [aws_s3_bucket.mdcurran-website-public]
 }
 
 resource "aws_s3_bucket" "mdcurran-website-redirect" {
   bucket        = "www.${var.mdcurran_website_domain}"
-  region        = "${var.aws_region}"
+  region        = var.aws_region
   acl           = "private"
   force_destroy = "false"
 
   website {
-    redirect_all_requests_to = "${var.mdcurran_website_domain}"
+    redirect_all_requests_to = var.mdcurran_website_domain
   }
-}
-
-locals {
-  s3_origin_id = "S3-${var.mdcurran_website_domain}"
 }
 
 resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
   origin {
-    domain_name = "${aws_s3_bucket.mdcurran-website-public.bucket_regional_domain_name}"
-    origin_id   = "${local.s3_origin_id}"
+    domain_name = aws_s3_bucket.mdcurran-website-public.bucket_regional_domain_name
+    origin_id   = local.s3_origin_id
   }
 
   enabled             = true
@@ -60,16 +54,16 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "${aws_s3_bucket.mdcurran-logs.bucket_domain_name}"
-    prefix          = "mdcurran.com/"
+    bucket          = aws_s3_bucket.mdcurran-logs.bucket_domain_name
+    prefix          = "${var.mdcurran_website_domain}/"
   }
 
-  aliases = ["${var.mdcurran_website_domain}", "www.${var.mdcurran_website_domain}"]
+  aliases = [var.mdcurran_website_domain, "www.${var.mdcurran_website_domain}"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "${local.s3_origin_id}"
+    target_origin_id = local.s3_origin_id
 
     forwarded_values {
       query_string = false
@@ -99,8 +93,8 @@ resource "aws_cloudfront_distribution" "mdcurran-website-distribution" {
   }
 
   depends_on = [
-    "aws_s3_bucket.mdcurran-logs",
-    "aws_s3_bucket.mdcurran-website-public",
-    "aws_s3_bucket.mdcurran-website-redirect",
+    aws_s3_bucket.mdcurran-logs,
+    aws_s3_bucket.mdcurran-website-public,
+    aws_s3_bucket.mdcurran-website-redirect,
   ]
 }
