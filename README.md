@@ -7,5 +7,5 @@ This includes:
 
 * Terraform state files stored remotely on GCS.
 * A [static website](https://mdcurran.com) deployed with S3 and CloudFront.
-* A single node Kubernetes cluster provisioned with [k3s](https://k3s.io)
+* A three node Kubernetes cluster provisioned with [k3s](https://k3s.io)
   deployed on DigitalOcean.

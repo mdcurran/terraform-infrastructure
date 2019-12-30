@@ -17,7 +17,18 @@ variable "droplet_region" {
   description = "Region where Droplets are to be deployed"
 }
 
-variable "droplet_size" {
+variable "droplet_size_master" {
   default     = "s-1vcpu-2gb"
-  description = "Size for deployed Droplets"
+  description = "Size for deployed Droplets acting as master nodes"
+}
+
+variable "droplet_size_worker" {
+  default     = "s-1vcpu-1gb"
+  description = "Size for deployed Droplets acting as worker nodes"
+}
+
+variable "droplet_generic_tags" {
+  type        = list(string)
+  default     = ["k3s", "kubernetes"]
+  description = "Generic Droplet tags for the Kubernetes cluster"
 }
