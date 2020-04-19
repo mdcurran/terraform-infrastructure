@@ -1,6 +1,11 @@
-variable "gcp_project_id" {
+variable "gcp_main_project_id" {
   default     = "mdcurran"
-  description = "ID of project to deploy resources into"
+  description = "ID of the main GCP project"
+}
+
+variable "gcp_palatable_project_id" {
+  default = "palatable"
+  description = "ID of the palatable GCP project"
 }
 
 variable "gcp_region" {
