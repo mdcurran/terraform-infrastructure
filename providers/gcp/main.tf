@@ -1,7 +1,7 @@
 provider "google" {
   version = "~> 2.8"
   project = var.gcp_main_project_id
-  region  = var.gcp_region
+  region  = var.gcp_london_region
 }
 
 resource "google_project" "mdcurran" {
@@ -14,6 +14,6 @@ resource "google_project" "mdcurran" {
 resource "google_storage_bucket" "mdcurran-terraform" {
   name          = "${var.gcp_main_project_id}-terraform"
   project       = var.gcp_main_project_id
-  location      = var.gcp_region
+  location      = var.gcp_london_region
   storage_class = "REGIONAL"
 }

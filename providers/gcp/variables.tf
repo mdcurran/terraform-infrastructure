@@ -8,9 +8,19 @@ variable "gcp_palatable_project_id" {
   description = "ID of the palatable GCP project"
 }
 
-variable "gcp_region" {
+variable "gcp_europe_multi_region" {
+  default = "eu"
+  description = "Identifier for the European multi-region"
+}
+
+variable "gcp_london_region" {
   default     = "europe-west2"
-  description = "GCP region to deploy resources into"
+  description = "Identifier for the London region"
+}
+
+variable "container_registry_bucket" {
+  default = "eu.artifacts.mdcurran.appspot.com"
+  description = "Name of the auto-generated container registry bucket"
 }
 
 variable "gcp_billing_account_id" {
