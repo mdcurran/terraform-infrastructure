@@ -3,11 +3,6 @@ variable "gcp_main_project_id" {
   description = "ID of the main GCP project"
 }
 
-variable "gcp_palatable_project_id" {
-  default = "palatable"
-  description = "ID of the palatable GCP project"
-}
-
 variable "gcp_europe_multi_region" {
   default = "eu"
   description = "Identifier for the European multi-region"
