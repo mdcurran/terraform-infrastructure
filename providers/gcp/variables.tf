@@ -4,7 +4,7 @@ variable "gcp_main_project_id" {
 }
 
 variable "gcp_europe_multi_region" {
-  default = "eu"
+  default     = "eu"
   description = "Identifier for the European multi-region"
 }
 
@@ -14,7 +14,7 @@ variable "gcp_london_region" {
 }
 
 variable "container_registry_bucket" {
-  default = "eu.artifacts.mdcurran.appspot.com"
+  default     = "eu.artifacts.mdcurran.appspot.com"
   description = "Name of the auto-generated container registry bucket"
 }
 
@@ -26,4 +26,9 @@ variable "gcp_billing_account_id" {
 variable "gcp_org_id" {
   default     = "382911368699"
   description = "The Google Cloud organisation ID to link with"
+}
+
+variable "mdcurran_website_domain" {
+  default     = "mdcurran.xyz"
+  description = "Personal website domain"
 }
